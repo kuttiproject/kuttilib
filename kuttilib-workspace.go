@@ -1,0 +1,17 @@
+package kuttilib
+
+import "github.com/kuttiproject/workspace"
+
+// SetWorkspace sets the kutti workspace to the path specified.
+// Config and Cache directories are set as subdirectories under the specified path,
+// called kutti-config and kutti-cache respectively.
+func SetWorkspace(workspacepath string) error {
+	return workspace.Set(workspacepath)
+}
+
+// ResetWorkspace resets the kutti workspace to the default location.
+// Config and Cache directories are set as subdirectories called kutti
+// under the current user's config and cache locations respectively.
+func ResetWorkspace() {
+	workspace.Reset()
+}
