@@ -1,6 +1,10 @@
 package kuttilib
 
-import "github.com/kuttiproject/drivercore"
+import (
+	"encoding/json"
+
+	"github.com/kuttiproject/drivercore"
+)
 
 // VersionStatus represents the current status of a version image.
 type VersionStatus drivercore.ImageStatus
@@ -11,20 +15,37 @@ const (
 	VersionStatusDownloaded    = VersionStatus(drivercore.ImageStatusDownloaded)
 )
 
+// versiondata is a data-only representation of the Version type,
+// used for serialization and output.
+type versiondata struct {
+	K8sVersion string
+	Status     string
+}
+
 // Version represents a Kubernetes version that may be
 // used to create a cluster.
 type Version struct {
 	image drivercore.Image
 }
 
-// K8sversion returns the Kubernetes version string.
-func (v *Version) K8sversion() string {
+// K8sVersion returns the Kubernetes version string.
+func (v *Version) K8sVersion() string {
 	return v.image.K8sVersion()
 }
 
 // Status returns the local availability of the version.
 func (v *Version) Status() VersionStatus {
 	return VersionStatus(v.image.Status())
+}
+
+// MarshalJSON returns the JSON encoding of the version.
+func (v *Version) MarshalJSON() ([]byte, error) {
+	savedata := versiondata{
+		K8sVersion: v.K8sVersion(),
+		Status:     string(v.Status()),
+	}
+
+	return json.Marshal(savedata)
 }
 
 // Fetch downloads this version's image from the Driver

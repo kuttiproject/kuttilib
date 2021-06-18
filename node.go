@@ -19,6 +19,8 @@ const (
 	NodeStatusRunning = NodeStatus(drivercore.MachineStatusRunning)
 )
 
+// nodedata is a data-only representation of the Node type,
+// used for serialization and output.
 type nodedata struct {
 	ClusterName string
 	Name        string

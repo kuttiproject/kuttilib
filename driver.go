@@ -1,6 +1,19 @@
 package kuttilib
 
-import "github.com/kuttiproject/drivercore"
+import (
+	"encoding/json"
+
+	"github.com/kuttiproject/drivercore"
+)
+
+// driverdata is a data-only representation of the Driver type,
+// used for serialization and output.
+type driverdata struct {
+	Name              string
+	Description       string
+	UsesNATNetworking bool
+	Status            string
+}
 
 // Driver is a kutti driver
 //
@@ -31,6 +44,18 @@ func (d *Driver) UsesNATNetworking() bool {
 // Status returns the driver status.
 func (d *Driver) Status() string {
 	return d.vmdriver.Status()
+}
+
+// MarshalJSON returns the JSON encoding of the driver.
+func (d *Driver) MarshalJSON() ([]byte, error) {
+	savedata := driverdata{
+		Name:              d.Name(),
+		Description:       d.Description(),
+		UsesNATNetworking: d.UsesNATNetworking(),
+		Status:            d.Status(),
+	}
+
+	return json.Marshal(savedata)
 }
 
 // UpdateVersionList fetches the latest list of available

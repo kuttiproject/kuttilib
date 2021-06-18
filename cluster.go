@@ -9,7 +9,7 @@ import (
 )
 
 // clusterdata is a data-only representation of the Cluster type,
-// used for serialization and output
+// used for serialization and output.
 type clusterdata struct {
 	Name       string
 	DriverName string
