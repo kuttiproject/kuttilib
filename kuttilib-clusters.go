@@ -29,8 +29,8 @@ func Clusters() []*Cluster {
 		result[i] = cluster
 		i++
 	}
-	sort.Slice(result, func(i, j int) bool {
-		return result[i].createdAt.After(result[j].createdAt)
+	sort.Slice(result, func(a, b int) bool {
+		return result[a].createdAt.After(result[b].createdAt)
 	})
 	return result
 }
