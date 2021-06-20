@@ -9,7 +9,8 @@ import (
 	"github.com/kuttiproject/drivercore"
 )
 
-// ClusterNames returns the names of all clusters.
+// ClusterNames returns the names of all clusters. The
+// order is not predictable.
 func ClusterNames() []string {
 	result := make([]string, len(config.Clusters))
 	i := 0

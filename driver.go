@@ -73,7 +73,8 @@ func (d *Driver) UpdateVersionList() error {
 }
 
 // VersionNames returns the Kubernetes version strings
-// of all available Versions for this driver.
+// of all available Versions for this driver, in
+// ascending order of K8sVersion.
 func (d *Driver) VersionNames() []string {
 	result := d.vmdriver.K8sVersions()
 	sort.Strings(result)

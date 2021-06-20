@@ -96,7 +96,7 @@ func (c *Cluster) ValidateNodeName(name string) error {
 }
 
 // NodeNames returns the names of all nodes
-// in the cluster.
+// in the cluster. The order is not predictable.
 func (c *Cluster) NodeNames() []string {
 	result := make([]string, len(c.nodes))
 	i := 0
@@ -107,7 +107,8 @@ func (c *Cluster) NodeNames() []string {
 	return result
 }
 
-// Nodes returns all the Nodes in the cluster.
+// Nodes returns all the Nodes in the cluster, in reverse
+// order of creation time.
 func (c *Cluster) Nodes() []*Node {
 	result := make([]*Node, len(c.nodes))
 	i := 0
