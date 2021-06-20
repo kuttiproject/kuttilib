@@ -62,7 +62,6 @@ func DeleteCluster(clustername string, force bool) error {
 		return errClusterDoesNotExist
 	}
 
-	// TODO: Temporary condition. Will fix later.
 	if len(cluster.nodes) > 0 {
 		return errClusterNotEmpty
 	}

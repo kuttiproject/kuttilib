@@ -6,7 +6,7 @@ import (
 	"github.com/kuttiproject/workspace"
 )
 
-const configFileName = "clusters.json"
+const configFileName = "kuttilib-clusters.json"
 
 var (
 	clusterconfigmanager workspace.Configmanager
