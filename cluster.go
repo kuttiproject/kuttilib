@@ -2,6 +2,7 @@ package kuttilib
 
 import (
 	"encoding/json"
+	"time"
 
 	"github.com/kuttiproject/kuttilog"
 
@@ -14,8 +15,9 @@ type clusterdata struct {
 	Name       string
 	DriverName string
 	K8sVersion string
-	Nodes      map[string]*Node
+	CreatedAt  time.Time
 	Type       string
+	Nodes      map[string]*Node
 }
 
 // Cluster represents a Kubernetes cluster, consisting of Nodes.
@@ -34,6 +36,7 @@ type Cluster struct {
 	driverName  string
 	driver      drivercore.Driver
 	k8sVersion  string
+	createdAt   time.Time
 	network     drivercore.Network
 	nodes       map[string]*Node
 	clustertype string
@@ -62,6 +65,11 @@ func (c *Cluster) Driver() *Driver {
 // associated with this cluster.
 func (c *Cluster) K8sVersion() string {
 	return c.k8sVersion
+}
+
+// CreatedAt returns the time this cluster was created.
+func (c *Cluster) CreatedAt() time.Time {
+	return c.createdAt
 }
 
 // Type returns the type of this cluster.
@@ -199,10 +207,12 @@ func (c *Cluster) CheckHostport(hostport int) error {
 
 // MarshalJSON returns the JSON encoding of the cluster.
 func (c *Cluster) MarshalJSON() ([]byte, error) {
+	utcloc, _ := time.LoadLocation("UTC")
 	savedata := clusterdata{
 		Name:       c.name,
 		DriverName: c.driverName,
 		K8sVersion: c.k8sVersion,
+		CreatedAt:  c.createdAt.In(utcloc),
 		Nodes:      c.nodes,
 		Type:       c.clustertype,
 	}
@@ -220,9 +230,12 @@ func (c *Cluster) UnmarshalJSON(b []byte) error {
 		return err
 	}
 
+	localloc, _ := time.LoadLocation("Local")
+
 	c.name = loaddata.Name
 	c.driverName = loaddata.DriverName
 	c.k8sVersion = loaddata.K8sVersion
+	c.createdAt = loaddata.CreatedAt.In(localloc)
 	c.nodes = loaddata.Nodes
 	c.clustertype = loaddata.Type
 
@@ -277,6 +290,7 @@ func (c *Cluster) addnode(nodename string, nodetype string) (*Node, error) {
 		cluster:     c,
 		clusterName: c.name,
 		name:        nodename,
+		createdAt:   time.Now(),
 		nodetype:    nodetype,
 		ports:       map[int]int{},
 	}

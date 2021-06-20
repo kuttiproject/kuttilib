@@ -2,6 +2,7 @@ package kuttilib
 
 import (
 	"encoding/json"
+	"time"
 
 	"github.com/kuttiproject/kuttilog"
 
@@ -24,6 +25,7 @@ const (
 type nodedata struct {
 	ClusterName string
 	Name        string
+	CreatedAt   time.Time
 	Type        string
 	Ports       map[int]int
 }
@@ -36,6 +38,7 @@ type Node struct {
 	cluster     *Cluster
 	clusterName string
 	name        string
+	createdAt   time.Time
 	nodetype    string
 	host        drivercore.Machine
 	//status      string
@@ -50,6 +53,11 @@ func (n *Node) Name() string {
 // Type returns the type of this node.
 func (n *Node) Type() string {
 	return n.nodetype
+}
+
+// CreatedAt returns the time this node was created.
+func (n *Node) CreatedAt() time.Time {
+	return n.createdAt
 }
 
 // Ports returns the node port to host port
@@ -237,9 +245,11 @@ func (n *Node) CheckHostport(hostport int) error {
 
 // MarshalJSON returns the JSON encoding of the node.
 func (n *Node) MarshalJSON() ([]byte, error) {
+	utcloc, _ := time.LoadLocation("UTC")
 	savedata := nodedata{
 		ClusterName: n.clusterName,
 		Name:        n.name,
+		CreatedAt:   n.createdAt.In(utcloc),
 		Type:        n.nodetype,
 		Ports:       n.ports,
 	}
@@ -257,8 +267,11 @@ func (n *Node) UnmarshalJSON(b []byte) error {
 		return err
 	}
 
+	localloc, _ := time.LoadLocation("Local")
+
 	n.clusterName = loaddata.ClusterName
 	n.name = loaddata.Name
+	n.createdAt = loaddata.CreatedAt.In(localloc)
 	n.nodetype = loaddata.Type
 	n.ports = loaddata.Ports
 

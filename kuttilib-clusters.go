@@ -1,6 +1,8 @@
 package kuttilib
 
 import (
+	"time"
+
 	"github.com/kuttiproject/kuttilog"
 
 	"github.com/kuttiproject/drivercore"
@@ -85,6 +87,7 @@ func newunmanagedcluster(name string, k8sversion string, drivername string) (*Cl
 		name:       name,
 		k8sVersion: k8sversion,
 		driverName: drivername,
+		createdAt:  time.Now(),
 		nodes:      map[string]*Node{},
 		status:     "UnInitialized",
 	}
