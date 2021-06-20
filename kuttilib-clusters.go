@@ -1,6 +1,7 @@
 package kuttilib
 
 import (
+	"sort"
 	"time"
 
 	"github.com/kuttiproject/kuttilog"
@@ -19,7 +20,8 @@ func ClusterNames() []string {
 	return result
 }
 
-// Clusters returns all clusters.
+// Clusters returns all clusters, sorted in reverse order of
+// creation time.
 func Clusters() []*Cluster {
 	result := make([]*Cluster, len(config.Clusters))
 	i := 0
@@ -27,6 +29,9 @@ func Clusters() []*Cluster {
 		result[i] = cluster
 		i++
 	}
+	sort.Slice(result, func(i, j int) bool {
+		return result[i].createdAt.After(result[j].createdAt)
+	})
 	return result
 }
 

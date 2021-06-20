@@ -2,6 +2,7 @@ package kuttilib
 
 import (
 	"encoding/json"
+	"sort"
 
 	"github.com/kuttiproject/drivercore"
 )
@@ -13,6 +14,7 @@ type driverdata struct {
 	Description       string
 	UsesNATNetworking bool
 	Status            string
+	Error             string
 }
 
 // Driver is a kutti driver
@@ -46,6 +48,11 @@ func (d *Driver) Status() string {
 	return d.vmdriver.Status()
 }
 
+// Error returns the last error in the driver.
+func (d *Driver) Error() string {
+	return d.vmdriver.Error()
+}
+
 // MarshalJSON returns the JSON encoding of the driver.
 func (d *Driver) MarshalJSON() ([]byte, error) {
 	savedata := driverdata{
@@ -53,6 +60,7 @@ func (d *Driver) MarshalJSON() ([]byte, error) {
 		Description:       d.Description(),
 		UsesNATNetworking: d.UsesNATNetworking(),
 		Status:            d.Status(),
+		Error:             d.Error(),
 	}
 
 	return json.Marshal(savedata)
@@ -67,10 +75,13 @@ func (d *Driver) UpdateVersionList() error {
 // VersionNames returns the Kubernetes version strings
 // of all available Versions for this driver.
 func (d *Driver) VersionNames() []string {
-	return d.vmdriver.K8sVersions()
+	result := d.vmdriver.K8sVersions()
+	sort.Strings(result)
+	return result
 }
 
-// Versions returns the available Versions for this driver.
+// Versions returns the available Versions for this driver,
+// in ascending order of K8sVersion.
 func (d *Driver) Versions() []*Version {
 	rawimages, err := d.vmdriver.ListImages()
 	if err != nil {
@@ -85,6 +96,9 @@ func (d *Driver) Versions() []*Version {
 		}
 	}
 
+	sort.Slice(result, func(i, j int) bool {
+		return result[i].K8sVersion() < result[j].K8sVersion()
+	})
 	return result
 }
 

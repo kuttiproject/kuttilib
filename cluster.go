@@ -2,6 +2,7 @@ package kuttilib
 
 import (
 	"encoding/json"
+	"sort"
 	"time"
 
 	"github.com/kuttiproject/kuttilog"
@@ -114,6 +115,9 @@ func (c *Cluster) Nodes() []*Node {
 		result[i] = node
 		i++
 	}
+	sort.Slice(result, func(i, j int) bool {
+		return result[i].createdAt.After(result[j].createdAt)
+	})
 	return result
 }
 
