@@ -105,6 +105,26 @@ func (n *Node) Start() error {
 	return errNodeCannotStart
 }
 
+// ForceStart tries to forcibly start this node.
+// It does not check the current status before doing so.
+func (n *Node) ForceStart() error {
+	err := n.ensurehost()
+	if err != nil {
+		return err
+	}
+
+	err = n.host.Start()
+	if err != nil {
+		return err
+	}
+
+	// TODO: Consider moving this wait, or standardize the duration
+	kuttilog.Print(kuttilog.Info, "Waiting for node to start...")
+	n.host.WaitForStateChange(25)
+	kuttilog.Println(kuttilog.Info, "Done.")
+	return nil
+}
+
 // Stop stops this node gracefully.
 func (n *Node) Stop() error {
 	err := n.ensurehost()
@@ -126,27 +146,24 @@ func (n *Node) Stop() error {
 
 }
 
-// ForceStop stops this node forcibly.
+// ForceStop tries to forcibly stop this node.
+// It does not check the current status before doing so.
 func (n *Node) ForceStop() error {
 	err := n.ensurehost()
 	if err != nil {
 		return err
 	}
 
-	if n.Status() == NodeStatusRunning {
-		err = n.host.ForceStop()
-		if err != nil {
-			return err
-		}
-
-		// TODO: Consider moving this wait, or standardize the duration
-		kuttilog.Print(2, "Waiting for node to stop...")
-		n.host.WaitForStateChange(25)
-		kuttilog.Println(2, "Done.")
-		return nil
+	err = n.host.ForceStop()
+	if err != nil {
+		return err
 	}
 
-	return errNodeCannotStop
+	// TODO: Consider moving this wait, or standardize the duration
+	kuttilog.Print(kuttilog.Info, "Waiting for node to stop...")
+	n.host.WaitForStateChange(25)
+	kuttilog.Println(kuttilog.Info, "Done.")
+	return nil
 }
 
 // ForwardSSHPort forwards the node's SSH port to the specified host
