@@ -6,7 +6,11 @@ import "github.com/kuttiproject/workspace"
 // Config and Cache directories are set as subdirectories under the specified path,
 // called kutti-config and kutti-cache respectively.
 func SetWorkspace(workspacepath string) error {
-	return workspace.Set(workspacepath)
+	err := workspace.Set(workspacepath)
+	if err == nil {
+		setworkspaceconfigmanager()
+	}
+	return err
 }
 
 // ResetWorkspace resets the kutti workspace to the default location.
@@ -14,4 +18,5 @@ func SetWorkspace(workspacepath string) error {
 // under the current user's config and cache locations respectively.
 func ResetWorkspace() {
 	workspace.Reset()
+	setworkspaceconfigmanager()
 }
