@@ -66,21 +66,23 @@ func DeleteCluster(clustername string, force bool) error {
 		return errClusterNotEmpty
 	}
 
-	kuttilog.Println(kuttilog.Info, "Deleting network...")
-	err := cluster.deletenetwork()
-	if err != nil {
-		if !force {
-			return err
+	if cluster.Driver().UsesPerClusterNetworking() {
+		kuttilog.Println(kuttilog.Info, "Deleting network...")
+		err := cluster.deletenetwork()
+		if err != nil {
+			if !force {
+				return err
+			}
+
+			kuttilog.Printf(
+				kuttilog.Quiet,
+				"Warning: Errors returned while deleting network: %v. Some artifacts may need manual cleanup.",
+				err,
+			)
 		}
 
-		kuttilog.Printf(
-			kuttilog.Quiet,
-			"Warning: Errors returned while deleting network: %v. Some artifacts may need manual cleanup.",
-			err,
-		)
+		kuttilog.Println(kuttilog.Info, "Network deleted.")
 	}
-
-	kuttilog.Println(kuttilog.Info, "Network deleted.")
 
 	delete(config.Clusters, clustername)
 
@@ -104,15 +106,17 @@ func newunmanagedcluster(name string, k8sversion string, drivername string) (*Cl
 	}
 
 	// Create Network
-	kuttilog.Println(kuttilog.Info, "Creating network...")
-	err = newCluster.createnetwork()
-	if err != nil {
-		return newCluster, err
-	}
+	if newCluster.Driver().UsesPerClusterNetworking() {
+		kuttilog.Println(kuttilog.Info, "Creating network...")
+		err = newCluster.createnetwork()
+		if err != nil {
+			return newCluster, err
+		}
 
-	newCluster.clustertype = "Unmanaged"
-	newCluster.status = "Ready"
-	kuttilog.Println(kuttilog.Info, "Network created.")
+		newCluster.clustertype = "Unmanaged"
+		newCluster.status = "Ready"
+		kuttilog.Println(kuttilog.Info, "Network created.")
+	}
 
 	return newCluster, nil
 }

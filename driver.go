@@ -10,11 +10,12 @@ import (
 // driverdata is a data-only representation of the Driver type,
 // used for serialization and output.
 type driverdata struct {
-	Name              string
-	Description       string
-	UsesNATNetworking bool
-	Status            string
-	Error             string
+	Name                     string
+	Description              string
+	UsesPerClusterNetworking bool
+	UsesNATNetworking        bool
+	Status                   string
+	Error                    string
 }
 
 // Driver is a kutti driver
@@ -37,6 +38,12 @@ func (d *Driver) Description() string {
 	return d.vmdriver.Description()
 }
 
+// UsesPerClusterNetworking returns true if the driver creates virtual networks
+// per cluster.
+func (d *Driver) UsesPerClusterNetworking() bool {
+	return d.vmdriver.UsesPerClusterNetworking()
+}
+
 // UsesNATNetworking returns true if the driver's networks use NAT,
 // and therefore require node ports to be forwarded.
 func (d *Driver) UsesNATNetworking() bool {
@@ -56,11 +63,12 @@ func (d *Driver) Error() string {
 // MarshalJSON returns the JSON encoding of the driver.
 func (d *Driver) MarshalJSON() ([]byte, error) {
 	savedata := driverdata{
-		Name:              d.Name(),
-		Description:       d.Description(),
-		UsesNATNetworking: d.UsesNATNetworking(),
-		Status:            d.Status(),
-		Error:             d.Error(),
+		Name:                     d.Name(),
+		Description:              d.Description(),
+		UsesPerClusterNetworking: d.UsesPerClusterNetworking(),
+		UsesNATNetworking:        d.UsesNATNetworking(),
+		Status:                   d.Status(),
+		Error:                    d.Error(),
 	}
 
 	return json.Marshal(savedata)
