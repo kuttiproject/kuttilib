@@ -2,6 +2,7 @@ package kuttilib
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/kuttiproject/kuttilog"
@@ -64,6 +65,37 @@ func (n *Node) CreatedAt() time.Time {
 // mappings of this node.
 func (n *Node) Ports() map[int]int {
 	return n.ports
+}
+
+// IPAddress returns the IP address of the node if it is running,
+// or an empty string if not.
+func (n *Node) IPAddress() string {
+	err := n.ensurehost()
+	if err != nil {
+		return ""
+	}
+
+	return n.host.IPAddress()
+}
+
+// SSHAddress returns the address to SSH into the node.
+// The return value is in "HOST:PORT" format if the node
+// is running, or an empty string if not.
+func (n *Node) SSHAddress() string {
+	if n.Cluster().Driver().UsesNATNetworking() {
+		port, ok := n.Ports()[22]
+		if !ok {
+			return ""
+		}
+		return fmt.Sprintf("localhost:%v", port)
+
+	}
+	err := n.ensurehost()
+	if err != nil {
+		return ""
+	}
+
+	return n.host.SSHAddress()
 }
 
 // Cluster returns the Cluster this node belongs to.

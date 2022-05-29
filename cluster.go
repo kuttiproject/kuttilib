@@ -173,15 +173,17 @@ func (c *Cluster) DeleteNode(nodename string, force bool) error {
 		}
 	}
 
-	// Unmap ports
-	kuttilog.Println(kuttilog.Info, "Unmapping ports...")
-	for key := range n.ports {
-		err := n.host.UnforwardPort(key)
-		if err != nil {
-			kuttilog.Printf(kuttilog.Quiet, "Error while unmapping ports for node '%s': %v.", nodename, err)
+	if c.Driver().UsesNATNetworking() {
+		// Unmap ports
+		kuttilog.Println(kuttilog.Info, "Unmapping ports...")
+		for key := range n.ports {
+			err := n.host.UnforwardPort(key)
+			if err != nil {
+				kuttilog.Printf(kuttilog.Quiet, "Error while unmapping ports for node '%s': %v.", nodename, err)
+			}
 		}
+		kuttilog.Println(kuttilog.Info, "Ports unmapped.")
 	}
-	kuttilog.Println(kuttilog.Info, "Ports unmapped.")
 
 	return c.deletenode(nodename, force)
 }
