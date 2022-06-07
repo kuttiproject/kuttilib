@@ -105,7 +105,7 @@ func newunmanagedcluster(name string, k8sversion string, drivername string) (*Cl
 		return newCluster, err
 	}
 
-	// Create Network
+	// Create Network if required
 	if newCluster.Driver().UsesPerClusterNetworking() {
 		kuttilog.Println(kuttilog.Info, "Creating network...")
 		err = newCluster.createnetwork()
@@ -113,10 +113,11 @@ func newunmanagedcluster(name string, k8sversion string, drivername string) (*Cl
 			return newCluster, err
 		}
 
-		newCluster.clustertype = "Unmanaged"
-		newCluster.status = "Ready"
 		kuttilog.Println(kuttilog.Info, "Network created.")
 	}
+
+	newCluster.clustertype = "Unmanaged"
+	newCluster.status = "Ready"
 
 	return newCluster, nil
 }
