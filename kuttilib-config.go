@@ -35,7 +35,7 @@ func (cc *clusterConfigData) Setdefaults() {
 	cc.Clusters = map[string]*Cluster{}
 }
 
-func init() {
+func setworkspaceconfigmanager() {
 	config = &clusterConfigData{
 		Clusters: map[string]*Cluster{},
 	}
@@ -45,4 +45,8 @@ func init() {
 	if err != nil {
 		panic("could not initialize cluster configuration manager")
 	}
+}
+
+func init() {
+	setworkspaceconfigmanager()
 }
