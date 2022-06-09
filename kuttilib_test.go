@@ -20,7 +20,7 @@ const (
 )
 
 func init() {
-	mock1 := drivermock.New("mock1", "Mock Driver with NAT", true)
+	mock1 := drivermock.New("mock1", "Mock Driver with NAT", true, true)
 	if mock1 != nil {
 		drivercore.RegisterDriver("mock1", mock1)
 		mock1.UpdateRemoteImage(K8SVERSION1, false)
