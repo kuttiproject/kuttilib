@@ -54,6 +54,13 @@ func (v *Version) Fetch() error {
 	return v.image.Fetch()
 }
 
+// FetchWithProgress downloads this version's image from the Driver
+// repository into the local cache, and reports progress via the
+// supplied callback. The callback reports current and total in bytes.
+func (v *Version) FetchWithProgress(progress func(current int64, total int64)) error {
+	return v.image.FetchWithProgress(progress)
+}
+
 // FromFile imports this version's image from the specified
 // local file.
 func (v *Version) FromFile(filename string) error {
