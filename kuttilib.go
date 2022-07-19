@@ -19,7 +19,7 @@ func ValidPort(portnumber int) bool {
 }
 
 // ValidateClusterName checks for the validity of a cluster name.
-// It uses Validname to check name validity, and also checks if
+// It uses ValidName to check name validity, and also checks if
 // a cluster with that name already exists.
 func ValidateClusterName(name string) error {
 	if !ValidName(name) {

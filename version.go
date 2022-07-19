@@ -6,10 +6,10 @@ import (
 	"github.com/kuttiproject/drivercore"
 )
 
-// VersionStatus represents the current status of a version image.
+// VersionStatus represents the current status of a version.
 type VersionStatus drivercore.ImageStatus
 
-// Possible VersionStatus values are:
+// The VersionStatus* constants list valid version statuses.
 const (
 	VersionStatusNotDownloaded = VersionStatus(drivercore.ImageStatusNotDownloaded)
 	VersionStatusDownloaded    = VersionStatus(drivercore.ImageStatusDownloaded)

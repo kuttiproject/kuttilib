@@ -28,13 +28,13 @@ func init() {
 }
 
 func testworkspace(t *testing.T) {
-	confdir, err := workspace.Configdir()
+	confdir, err := workspace.ConfigDir()
 	if err != nil {
 		t.Errorf("getting config dir failed with:%v", err)
 	}
 	t.Logf("Config dir is :%v", confdir)
 
-	cachedir, err := workspace.Cachedir()
+	cachedir, err := workspace.CacheDir()
 	if err != nil {
 		t.Errorf("getting cache dir failed with:%v", err)
 	}
@@ -197,7 +197,7 @@ func testNodes(t *testing.T) {
 		t.Fatalf("forwarding SSH port failed with: %v", err)
 	}
 
-	err = node.CheckHostport(HOSTPORT2)
+	err = node.CheckHostPort(HOSTPORT2)
 	if err != nil {
 		t.Fatal("host port should have been occupied. Wasn't")
 	}

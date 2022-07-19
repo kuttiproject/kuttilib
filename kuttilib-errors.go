@@ -8,6 +8,7 @@ var (
 	errClusterDoesNotExist     = errors.New("cluster does not exist")
 	errClusterNotEmpty         = errors.New("cluster is not empty")
 	errDriverDoesNotExist      = errors.New("driver does not exist")
+	errVersionDeprecated       = errors.New("version is deprecated")
 	errImageNotAvailable       = errors.New("image not available")
 	errNodeExists              = errors.New("node already exists")
 	errNodeNotFound            = errors.New("node not found")

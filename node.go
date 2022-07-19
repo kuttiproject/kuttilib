@@ -13,7 +13,7 @@ import (
 // NodeStatus represents the status of a Node.
 type NodeStatus drivercore.MachineStatus
 
-// Possible NodeStatus values are:
+// The NodeStatus* constants define valid node statuses.
 const (
 	NodeStatusError   = NodeStatus(drivercore.MachineStatusError)
 	NodeStatusUnknown = NodeStatus(drivercore.MachineStatusUnknown)
@@ -80,7 +80,8 @@ func (n *Node) IPAddress() string {
 
 // SSHAddress returns the address to SSH into the node.
 // The return value is in "HOST:PORT" format if the node
-// is running, or an empty string if not.
+// is running, or an empty string if not. If the Driver
+// uses NAT networking, the host is "localhost".
 func (n *Node) SSHAddress() string {
 	if n.Cluster().Driver().UsesNATNetworking() {
 		port, ok := n.Ports()[22]
@@ -228,7 +229,7 @@ func (n *Node) ForwardPort(hostport int, nodeport int) error {
 		return err
 	}
 
-	err = n.CheckHostport(hostport)
+	err = n.CheckHostPort(hostport)
 	if err != nil {
 		return err
 	}
@@ -286,10 +287,10 @@ func (n *Node) UnforwardPort(nodeport int) error {
 	return clusterconfigmanager.Save()
 }
 
-// CheckHostport checks if a host port is occupied in the current cluster.
-func (n *Node) CheckHostport(hostport int) error {
+// CheckHostPort checks if a host port is occupied in the current cluster.
+func (n *Node) CheckHostPort(hostport int) error {
 	c := n.Cluster()
-	return c.CheckHostport(hostport)
+	return c.CheckHostPort(hostport)
 }
 
 // MarshalJSON returns the JSON encoding of the node.
@@ -329,6 +330,16 @@ func (n *Node) UnmarshalJSON(b []byte) error {
 
 func (n *Node) createhost() error {
 	c := n.Cluster()
+
+	driverimage, err := c.driver.GetImage(c.k8sVersion)
+	if err != nil {
+		return err
+	}
+
+	if driverimage.Deprecated() {
+		return errVersionDeprecated
+	}
+
 	host, err := c.driver.NewMachine(n.name, c.name, c.k8sVersion)
 	if err != nil {
 		n.host = nil

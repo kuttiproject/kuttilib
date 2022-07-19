@@ -123,7 +123,7 @@ func newunmanagedcluster(name string, k8sversion string, drivername string) (*Cl
 }
 
 // NewEmptyCluster creates a new, empty cluster.
-// It uses IsValidname to check name validity, and also checks if a cluster with the
+// It uses ValidName to check name validity, and also checks if a cluster with the
 // name already exists.
 func NewEmptyCluster(name string, k8sversion string, drivername string) error {
 	// Validate name
@@ -146,6 +146,10 @@ func NewEmptyCluster(name string, k8sversion string, drivername string) error {
 
 	if driverimage.Status() != drivercore.ImageStatusDownloaded {
 		return errImageNotAvailable
+	}
+
+	if driverimage.Deprecated() {
+		return errVersionDeprecated
 	}
 
 	// Create cluster

@@ -18,12 +18,12 @@ type driverdata struct {
 	Error                    string
 }
 
-// Driver is a kutti driver
+// Driver is a kutti driver.
 //
-// Each Driver supports a number of Versions, and provides
-// a driver-specific image for creating nodes. A Driver
-// also provides a repository from which to fetch the list
-// of supported versions and images.
+// Each Driver supports a number of Versions, which provide
+// driver-specific images for creating nodes. A Driver also
+// provides a repository from which to fetch the list of
+// supported versions, and the images listed in it.
 type Driver struct {
 	vmdriver drivercore.Driver
 }
@@ -38,14 +38,14 @@ func (d *Driver) Description() string {
 	return d.vmdriver.Description()
 }
 
-// UsesPerClusterNetworking returns true if the driver creates virtual networks
-// per cluster.
+// UsesPerClusterNetworking returns true if the driver creates
+// virtual networks per cluster.
 func (d *Driver) UsesPerClusterNetworking() bool {
 	return d.vmdriver.UsesPerClusterNetworking()
 }
 
-// UsesNATNetworking returns true if the driver's networks use NAT,
-// and therefore require node ports to be forwarded.
+// UsesNATNetworking returns true if the driver's networks use
+// NAT, and therefore require node ports to be forwarded.
 func (d *Driver) UsesNATNetworking() bool {
 	return d.vmdriver.UsesNATNetworking()
 }

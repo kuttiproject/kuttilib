@@ -17,5 +17,5 @@ const (
 
 // SetVerbosityLevel sets the current log level. If level is invalid, it is not changed.
 func SetVerbosityLevel(level VerbosityLevel) {
-	kuttilog.Setloglevel(int(level))
+	kuttilog.SetLogLevel(int(level))
 }

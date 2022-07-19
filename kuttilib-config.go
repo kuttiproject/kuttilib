@@ -9,7 +9,7 @@ import (
 const configFileName = "kuttilib-clusters.json"
 
 var (
-	clusterconfigmanager workspace.Configmanager
+	clusterconfigmanager workspace.ConfigManager
 	config               *clusterConfigData
 )
 
@@ -31,7 +31,7 @@ func (cc *clusterConfigData) Deserialize(data []byte) error {
 	return err
 }
 
-func (cc *clusterConfigData) Setdefaults() {
+func (cc *clusterConfigData) SetDefaults() {
 	cc.Clusters = map[string]*Cluster{}
 }
 
@@ -41,7 +41,7 @@ func setworkspaceconfigmanager() {
 	}
 
 	var err error
-	clusterconfigmanager, err = workspace.NewFileConfigmanager(configFileName, config)
+	clusterconfigmanager, err = workspace.NewFileConfigManager(configFileName, config)
 	if err != nil {
 		panic("could not initialize cluster configuration manager")
 	}

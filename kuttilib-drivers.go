@@ -7,7 +7,7 @@ import (
 // ValidDriverName checks if the specified name belongs to
 // an available Driver.
 func ValidDriverName(drivername string) bool {
-	return drivercore.RegisteredDriver(drivername)
+	return drivercore.IsRegisteredDriver(drivername)
 }
 
 // DriverNames returns the names of all available Drivers.

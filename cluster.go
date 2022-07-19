@@ -29,9 +29,11 @@ type clusterdata struct {
 //
 // Each cluster is also associated with a Version, which
 // represents the version of Kubernetes this cluster will run.
+// A Driver will use the Version to identify an Image, from
+// which the Nodes in the cluster will be created.
 //
-// These decisions are  taken while creating the cluster, and
-// cannot be changed later.
+// The Driver and Version are selected while creating the
+//  cluster, and cannot be changed later.
 type Cluster struct {
 	name        string
 	driverName  string
@@ -79,7 +81,7 @@ func (c *Cluster) Type() string {
 }
 
 // ValidateNodeName checks for the validity of a node name.
-// It uses Validname to check name validity, and also checks if a node name
+// It uses ValidName to check name validity, and also checks if a node name
 // already exists in the cluster.
 func (c *Cluster) ValidateNodeName(name string) error {
 	if !ValidName(name) {
@@ -189,7 +191,7 @@ func (c *Cluster) DeleteNode(nodename string, force bool) error {
 }
 
 // NewUninitializedNode adds a node, but does not join it to a kubernetes cluster.
-// It uses Validname to check name validity, and also checks if a node with the
+// It uses ValidName to check name validity, and also checks if a node with the
 // name already exists.
 func (c *Cluster) NewUninitializedNode(nodename string) (*Node, error) {
 	err := c.ValidateNodeName(nodename)
@@ -200,8 +202,8 @@ func (c *Cluster) NewUninitializedNode(nodename string) (*Node, error) {
 	return c.addnode(nodename, "Unmanaged")
 }
 
-// CheckHostport returns an error if a host port is occupied in the current cluster.
-func (c *Cluster) CheckHostport(hostport int) error {
+// CheckHostPort returns an error if a host port is occupied in the current cluster.
+func (c *Cluster) CheckHostPort(hostport int) error {
 	for _, nodevalue := range c.nodes {
 		for _, hostportvalue := range nodevalue.ports {
 			if hostportvalue == hostport {
