@@ -1,6 +1,6 @@
 module github.com/kuttiproject/kuttilib
 
-go 1.22
+go 1.24.2
 
 require (
 	github.com/kuttiproject/drivercore v0.3.1

@@ -20,6 +20,7 @@ const (
 type versiondata struct {
 	K8sVersion string
 	Status     string
+	Deprecated bool
 }
 
 // Version represents a Kubernetes version that may be
@@ -38,11 +39,16 @@ func (v *Version) Status() VersionStatus {
 	return VersionStatus(v.image.Status())
 }
 
+func (v *Version) Deprecated() bool {
+	return v.image.Deprecated()
+}
+
 // MarshalJSON returns the JSON encoding of the version.
 func (v *Version) MarshalJSON() ([]byte, error) {
 	savedata := versiondata{
 		K8sVersion: v.K8sVersion(),
 		Status:     string(v.Status()),
+		Deprecated: v.Deprecated(),
 	}
 
 	return json.Marshal(savedata)

@@ -16,3 +16,7 @@
 
 # Build and test output
 out/
+
+# VS Code settings
+.vscode/
+
