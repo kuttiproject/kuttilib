@@ -3,7 +3,7 @@ package kuttilib
 import "errors"
 
 var (
-	errInvalidName             = errors.New("invalid name. Valid names are up to 10 characters long, must start with a lowercase letter, and may contain lowercase letters and digits only")
+	errInvalidName             = errors.New("invalid name. Valid names are 2 to 63 characters long, must start with a lowercase letter, and may contain lowercase letters, digits, hyphens and underscores only")
 	errClusterExists           = errors.New("cluster already exists")
 	errClusterDoesNotExist     = errors.New("cluster does not exist")
 	errClusterNotEmpty         = errors.New("cluster is not empty")

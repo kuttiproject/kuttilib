@@ -5,11 +5,11 @@ import (
 )
 
 // ValidName checks for the validity of a name.
-// Valid names of kutti objects are up to 10 characters long,
+// Valid names of kutti objects are between 2 and 63 characters long,
 // must start with a lowercase letter, and may contain
-// lowercase letters and digits only.
+// lowercase letters, digits, hyphens and underscores only.
 func ValidName(name string) bool {
-	matched, _ := regexp.MatchString("^[a-z]([a-z0-9]{1,9})$", name)
+	matched, _ := regexp.MatchString("^[a-z][a-z0-9_-]{1,62}$", name)
 	return matched
 }
 

@@ -2,7 +2,6 @@
 
 An API to manage Kubernetes clusters and nodes.
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/kuttiproject/kuttilib)](https://goreportcard.com/report/github.com/kuttiproject/kuttilib)
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/kuttiproject/kuttilib)](https://pkg.go.dev/github.com/kuttiproject/kuttilib)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/kuttiproject/kuttilib?include_prereleases)
 
